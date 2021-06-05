@@ -74,13 +74,21 @@ class RailWay
 
     case action
     when '1'
+      begin
       create_station
+      rescue
+        puts ' Неверный формат имени станции '
+      end
     when '2'
       show_all_stations
     when '3'
       show_trains_on_starions
     when '4'
+      begin
       create_train
+      rescue
+      puts 'Поезд не создан.'
+      end
     when '5'
       create_route
     when '6'
@@ -94,8 +102,11 @@ class RailWay
       sent_train_by_route
 
     when '10'
+      begin
       add_carriage_to_train
-
+      rescue
+        puts 'Недопустимый формат номер вагона.'
+      end
     when '11'
       del_carriage_from_train
     when '12'
@@ -185,10 +196,11 @@ class RailWay
 
   def add_carriage_to_train
     print 'Выберите поезд:'
-    train_num = gets.chomp.to_i
+    train_num = gets.chomp
     print 'Выберите вагон для довбавления:'
-    carriage_num = gets.chomp.to_i
+    carriage_num = gets.chomp
     train_by_num(train_num).add_carriage(carriage_by_num(carriage_num))
+    puts "Вагон #{carriage_num} добавлен к поезду #{train_num} "
   end
 
   def del_carriage_from_train

@@ -6,6 +6,3 @@ class CargoTrain < Train
     @type = :cargo
   end
 end
-begin
-  rescue
-end

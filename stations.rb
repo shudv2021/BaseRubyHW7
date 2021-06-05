@@ -1,7 +1,9 @@
 require_relative 'counter.rb'
+require_relative 'valid.rb'
 class Station
   attr_reader :station_name, :all_trains
   include Counter
+  include Valid
   @@station_all = []
   def self.get_all
     @@station_all
@@ -9,6 +11,7 @@ class Station
 
   def initialize (station_name)
     @station_name = station_name
+    validate!(@station_name, STATION_FORMAT)
     @all_trains = []
     @@station_all<<self
     increase_counter

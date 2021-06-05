@@ -1,7 +1,8 @@
 require_relative 'modules.rb'
 require_relative 'counter.rb'
 require_relative 'valid.rb'
-#require_relative 'inst_counter.rb'
+require_relative 'rail_way.rb'
+
 class Train
   include Producer
   include Counter
