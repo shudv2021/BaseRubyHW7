@@ -1,12 +1,10 @@
 require_relative 'modules.rb'
 require_relative 'counter.rb'
-require_relative 'valid.rb'
 require_relative 'rail_way.rb'
 
 class Train
   include Producer
   include Counter
-  include Valid
   @@train_all = []
   @@instances = 0
   def self.find(train_num)
@@ -15,17 +13,28 @@ class Train
     end
     return nil
   end
-
+  TRAIN_NUMBER_FORMAT =/[0-9]{3}-[а-я]{2}$/i
   attr_reader :train_num, :route, :current_station, :speed, :type, :total_carriages
+
+  def valide_format!(train_num)
+    (train_num =~ TRAIN_NUMBER_FORMAT) == 0
+  end
+
+  def validate!(train_num)
+    raise ' Неверный формат имение поезда. ' if valide_format!(train_num) == false
+  end
+
   def initialize(train_num)
     @train_num = train_num
-    validate!(@train_num, TRAIN_NUMBER_FORMAT)
+    validate!(@train_num)
     @total_carriages = []
     @route
     @speed = 0
     @@train_all<<self
     increase_counter
   end
+
+
 
   def add_speed(add_sp)
     @speed += add_sp
@@ -45,6 +54,8 @@ class Train
     return nil
     else @total_carriages.push(carriage)
     end
+  rescue
+    puts ' Неврный форамат имени поезда. Допустимый формат №№№-АА. '
   end
 
   def unhook

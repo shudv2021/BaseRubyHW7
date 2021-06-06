@@ -1,22 +1,31 @@
 require_relative 'counter.rb'
-require_relative 'valid.rb'
+
 class Station
   attr_reader :station_name, :all_trains
+  STATION_FORMAT = /[а-я]*$/i
   include Counter
-  include Valid
   @@station_all = []
   def self.get_all
     @@station_all
   end
 
+  def valide_format!(station_name)
+    (station_name =~ STATION_FORMAT) == 0
+  end
+
+  def validate!(station_name)
+    raise ' Неверный формат имени станции. ' if valide_format!(station_name) == false
+  end
+
   def initialize (station_name)
     @station_name = station_name
-    validate!(@station_name, STATION_FORMAT)
+    validate!(@station_name)
     @all_trains = []
     @@station_all<<self
     increase_counter
   end
   #Все методы используются другими классами
+
   def add_train(train)
     @all_trains<<train
   end

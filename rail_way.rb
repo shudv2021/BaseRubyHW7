@@ -15,9 +15,7 @@ class RailWay
     @total_trains = []
     @total_carriages = []
   end
-  #вне private потому что мы можем обращаться к методу из main.rb
-  # возможнов в main его нужно будет отключить, а вместо него написать метод чтения из файла
-  # а потом опять подключить
+
   def seed
     start_stations = %w[Краснодар Ростов Воронеж Москва Владимир]
     start_stations.each { |station| @total_stations<<Station.new(station) }
@@ -58,7 +56,7 @@ class RailWay
     puts ' 21 показать все станции через переменную класса станции '
     puts ' 3.Показать все поезда на станции '
     puts ' 4.Создать поезд '
-    puts ' 41 показать поез под номером'
+    puts ' 41 Показать поез под номером'
     puts ' 5.Создать маршрут '
     puts ' 6.Добавить станцию на маршрут '
     puts ' 7.Удалить станцию с маршрута '
@@ -74,21 +72,13 @@ class RailWay
 
     case action
     when '1'
-      begin
       create_station
-      rescue
-        puts ' Неверный формат имени станции '
-      end
     when '2'
       show_all_stations
     when '3'
       show_trains_on_starions
     when '4'
-      begin
       create_train
-      rescue
-      puts 'Поезд не создан.'
-      end
     when '5'
       create_route
     when '6'
@@ -97,16 +87,10 @@ class RailWay
       del_station_from_route
     when '8'
       self.show_all_rotes
-
     when '9'
       sent_train_by_route
-
     when '10'
-      begin
       add_carriage_to_train
-      rescue
-        puts 'Недопустимый формат номер вагона.'
-      end
     when '11'
       del_carriage_from_train
     when '12'
@@ -115,18 +99,20 @@ class RailWay
       sent_train_back
     when '14'
       #проверка идет ли подсчет элементов на жд
-      puts Train.counter
-      puts CargoTrain.counter
-      puts PasangerTrain.counter
-      puts Station.counter
-      puts CargoCarriage.counter
-      puts PassangerCarriage.counter
+      puts '************************************************************'
+      puts ' В процессе работы программы было создано: '
+      puts "поездов без типа- #{Train.counter}"
+      puts "грузовых поездов - #{CargoTrain.counter}"
+      puts "пассажирсикх поездов - #{PasangerTrain.counter}"
+      puts "станций - #{Station.counter}"
+      puts "грузовых вагонов - #{CargoCarriage.counter}"
+      puts "пассажирских вагонов - #{PassangerCarriage.counter}"
+      puts '*************************************************************'
       finished_all
     when '21'
       show_all_stations_by_all
     when '41'
       show_train_by_num
-
     end
     end
   end
@@ -138,6 +124,8 @@ class RailWay
     puts 'Введите название станции:'
     station_name = gets.chomp
     self.total_stations.push(Station.new(station_name))
+  rescue
+    puts ' Неверный формат имени станции. Наберите название станции по русски. '
   end
 
   def show_all_stations
@@ -200,7 +188,9 @@ class RailWay
     print 'Выберите вагон для довбавления:'
     carriage_num = gets.chomp
     train_by_num(train_num).add_carriage(carriage_by_num(carriage_num))
-    puts "Вагон #{carriage_num} добавлен к поезду #{train_num} "
+    puts " Вагон #{carriage_num} добавлен к поезду #{train_num} "
+  rescue
+    puts ' Ошибка при добавлении вагона. '
   end
 
   def del_carriage_from_train
@@ -240,13 +230,14 @@ class RailWay
     @total_trains.each do |train|
       return train if train.train_num == train_num
     end
+    raise "Операция невозможна, нет поезда #{train_num}"
   end
 
   def show_train_by_num
     #Показывает обьект поезд по выбранному номеру используя метод класс
     print ' Введите номер поезда:'
-    train_num = gets.chomp.to_i
-    puts Train.find(train_num)
+    train_num = gets.chomp
+    puts Train.find(train_num).inspect
   end
 
   def carriage_by_num(carriage_num)
@@ -258,10 +249,12 @@ class RailWay
   def add_train(type, train_num)
     if type == '1'
       total_trains.push(PasangerTrain.new(train_num))
-      puts ' Создаем поезд '
     elsif type == '2'
       total_trains.push(CargoTrain.new(train_num))
     end
+    puts "Создан поезд #{train_num}"
+  rescue
+    puts ' Введеннй формат поезда неверен. Допустимый формат №№№-АА. '
   end
 
   def show_all_rotes
@@ -274,9 +267,6 @@ class RailWay
     end
   end
 
-
-
 end
 
-#rr=RailWay.new
 
