@@ -13,28 +13,20 @@ class Train
     end
     return nil
   end
+
   TRAIN_NUMBER_FORMAT =/[0-9]{3}-[а-я]{2}$/i
+
   attr_reader :train_num, :route, :current_station, :speed, :type, :total_carriages
-
-  def valide_format!(train_num)
-    (train_num =~ TRAIN_NUMBER_FORMAT) == 0
-  end
-
-  def validate!(train_num)
-    raise ' Неверный формат имение поезда. ' if valide_format!(train_num) == false
-  end
 
   def initialize(train_num)
     @train_num = train_num
-    validate!(@train_num)
+    validate!
     @total_carriages = []
     @route
     @speed = 0
     @@train_all<<self
     increase_counter
   end
-
-
 
   def add_speed(add_sp)
     @speed += add_sp
@@ -54,8 +46,6 @@ class Train
     return nil
     else @total_carriages.push(carriage)
     end
-  rescue
-    puts ' Неврный форамат имени поезда. Допустимый формат №№№-АА. '
   end
 
   def unhook
@@ -90,8 +80,6 @@ class Train
     if @route.all_stations.index(@current_station)  == @route.all_stations.size
       return nil
     else
-      #puts @route.all_stations.index(@current_station)
-      #puts @route.all_stations.size
       return @route.all_stations[@route.all_stations.index(@current_station) + 1]
     end
   end
@@ -104,6 +92,15 @@ class Train
     @current_station.all_trains.delete(self)
     @current_station = station
     @current_station.all_trains.push(self)
+  end
+
+
+  def valide_format!
+    (@train_num =~ TRAIN_NUMBER_FORMAT) == 0
+  end
+
+  def validate!
+    raise ' Неверный формат имение поезда. ' if valide_format! == false
   end
 
 end

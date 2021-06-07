@@ -20,7 +20,6 @@ class RailWay
     start_stations = %w[Краснодар Ростов Воронеж Москва Владимир]
     start_stations.each { |station| @total_stations<<Station.new(station) }
     total_trains.push(CargoTrain.new('111-гп'))
-    puts train_by_num('111-гп').class
     train_by_num('111-гп').producer= ('BMW')
     total_trains.push(CargoTrain.new('222-гп'))
     total_trains.push(PasangerTrain.new('333-пп'))
@@ -38,7 +37,6 @@ class RailWay
     total_routs[0].add_station(2, total_stations[2])
     total_routs[0].add_station(3, total_stations[3])
     #отправляем поезда по маршруту
-    #self.total_trains.each { |train| puts train.train_num.class}
     train_by_num('111-гп').sent_train(total_routs[0])
     train_by_num('222-гп').sent_train(total_routs[0])
     train_by_num('333-пп').sent_train(total_routs[0])
@@ -124,6 +122,7 @@ class RailWay
     puts 'Введите название станции:'
     station_name = gets.chomp
     self.total_stations.push(Station.new(station_name))
+    puts " Станция #{station_name} обавлена. "
   rescue
     puts ' Неверный формат имени станции. Наберите название станции по русски. '
   end
@@ -190,7 +189,7 @@ class RailWay
     train_by_num(train_num).add_carriage(carriage_by_num(carriage_num))
     puts " Вагон #{carriage_num} добавлен к поезду #{train_num} "
   rescue
-    puts ' Ошибка при добавлении вагона. '
+    puts 'Операция по добавлению вагона провалена. '
   end
 
   def del_carriage_from_train
@@ -244,15 +243,17 @@ class RailWay
     @total_carriages.each do |carriage|
       return carriage if carriage.carr_num == carriage_num
     end
+    raise "Операция невозможна, такго вагона #{carriage_num} нет "
   end
 
   def add_train(type, train_num)
-    if type == '1'
-      total_trains.push(PasangerTrain.new(train_num))
-    elsif type == '2'
+    if type == '2'
       total_trains.push(CargoTrain.new(train_num))
+      puts "Создан грузовой поезд#{train_num}"
+    elsif type == '1'
+      total_trains.push(PasangerTrain.new(train_num))
+      puts "Создан пассажирский поезд #{train_num}"
     end
-    puts "Создан поезд #{train_num}"
   rescue
     puts ' Введеннй формат поезда неверен. Допустимый формат №№№-АА. '
   end
